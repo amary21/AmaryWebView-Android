@@ -1,8 +1,6 @@
 package com.thefinestartist.finestwebview.listeners
 
-/**
- * Created by TheFinestArtist on 1/26/16.
- */
+
 abstract class WebViewListener {
   fun onProgressChanged(progress: Int) {}
   fun onReceivedTitle(title: String?) {}

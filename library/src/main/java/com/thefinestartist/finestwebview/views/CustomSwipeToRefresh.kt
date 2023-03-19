@@ -8,9 +8,6 @@ import android.webkit.WebView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.thefinestartist.finestwebview.utils.UnitConverter.dpToPx
 
-/**
- * Created by TheFinestArtist on 3/12/16.
- */
 class CustomSwipeToRefresh : SwipeRefreshLayout {
   private var webView: WebView? = null
 

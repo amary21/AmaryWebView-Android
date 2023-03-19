@@ -6,9 +6,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
-/**
- * Created by TheFinestArtist on 1/26/16.
- */
 class BroadCastManager(
   context: Context,
   private val key: Int,

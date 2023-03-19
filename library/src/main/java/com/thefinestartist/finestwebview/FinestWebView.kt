@@ -20,7 +20,6 @@ import com.thefinestartist.finestwebview.listeners.WebViewListener
 import java.io.Serializable
 import java.util.*
 
-/** Created by Leonardo on 11/21/15.  */
 data class FinestWebView(
   @Transient var context: Context,
   @Transient var listeners: MutableList<WebViewListener> = ArrayList(),

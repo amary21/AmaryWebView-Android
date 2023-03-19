@@ -2,9 +2,6 @@ package com.thefinestartist.finestwebview.utils
 
 import android.graphics.Color
 
-/**
- * Created by Leonardo on 11/28/15.
- */
 object ColorUtil {
   fun disableColor(color: Int): Int {
     val alpha = Color.alpha(color)

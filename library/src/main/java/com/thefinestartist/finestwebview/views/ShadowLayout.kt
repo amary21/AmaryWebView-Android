@@ -12,9 +12,6 @@ import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import com.thefinestartist.finestwebview.R
 
-/**
- * Created by Leonardo on 11/26/15.
- */
 class ShadowLayout : FrameLayout {
   private var shadowColor = 0
   private var shadowSize = 0f
