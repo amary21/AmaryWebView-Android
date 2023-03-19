@@ -1,4 +1,4 @@
-package com.thefinestartist.finestwebview.listeners
+package com.amary.webview.listeners
 
 
 abstract class WebViewListener {

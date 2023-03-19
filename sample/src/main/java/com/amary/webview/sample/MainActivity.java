@@ -1,10 +1,10 @@
-package com.thefinestartist.finestwebview.sample;
+package com.amary.webview.sample;
 
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
-import com.thefinestartist.finestwebview.FinestWebView;
+import com.amary.webview.AmaryWebView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,16 +16,9 @@ public class MainActivity extends AppCompatActivity {
 
   public void onClick(View view) {
     if (view.getId() == R.id.defaultTheme) {
-      new FinestWebView(this).titleDefault("The Finest Artist").show("http://thefinestartist.com");
-      ////                    .toolbarScrollFlags(0)
-      //                    .webViewJavaScriptEnabled(true)
-      //                    .webViewUseWideViewPort(false)
-      ////                    .show("http://andrewliu.in/2016/01/30/聊聊Redis的订阅发布/");
-      //                    .show("http://www.youtube.com");
+      new AmaryWebView(this).titleDefault("The Finest Artist").show("http://thefinestartist.com");
     } else if (view.getId() == R.id.redTheme) {
-      //            Intent intent = new Intent(this, WebViewActivity.class);
-      //            startActivity(intent);
-      new FinestWebView(this)
+      new AmaryWebView(this)
           .theme(R.style.RedTheme)
           .titleDefault("Bless This Stuff")
           .webViewBuiltInZoomControls(true)
@@ -43,8 +36,8 @@ public class MainActivity extends AppCompatActivity {
                   + "!';")
           .show("http://www.blessthisstuff.com");
     } else if (view.getId() == R.id.blueTheme) {
-      new FinestWebView(this)
-          .theme(R.style.FinestWebViewTheme)
+      new AmaryWebView(this)
+          .theme(R.style.AmaryWebViewTheme)
           .titleDefault("Vimeo")
           .showUrl(false)
           .statusBarColorRes(R.color.bluePrimaryDark)
@@ -66,8 +59,8 @@ public class MainActivity extends AppCompatActivity {
           .setCustomAnimations(R.anim.slide_up, R.anim.hold, R.anim.hold, R.anim.slide_down)
           .show("http://example.com");
     } else if (view.getId() == R.id.blackTheme) {
-      new FinestWebView(this)
-          .theme(R.style.FinestWebViewTheme)
+      new AmaryWebView(this)
+          .theme(R.style.AmaryWebViewTheme)
           .titleDefault("Dribbble")
           .toolbarScrollFlags(0)
           .statusBarColorRes(R.color.blackPrimaryDark)
@@ -78,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
           .progressBarColorRes(R.color.finestWhite)
           .swipeRefreshColorRes(R.color.blackPrimaryDark)
           .menuSelector(R.drawable.selector_light_theme)
-          .menuTextGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT)
+          .menuTextGravity(Gravity.CENTER_VERTICAL | Gravity.END)
           .menuTextPaddingRightRes(R.dimen.defaultMenuTextPaddingLeft)
           .dividerHeight(0)
           .gradientDivider(false)

@@ -1,4 +1,4 @@
-package com.thefinestartist.finestwebview
+package com.amary.webview
 
 import android.app.Activity
 import android.content.Context
@@ -14,13 +14,13 @@ import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.core.content.ContextCompat
 import com.google.android.material.appbar.AppBarLayout.LayoutParams.*
-import com.thefinestartist.finestwebview.enums.ProgressBarPosition
-import com.thefinestartist.finestwebview.listeners.BroadCastManager
-import com.thefinestartist.finestwebview.listeners.WebViewListener
+import com.amary.webview.enums.ProgressBarPosition
+import com.amary.webview.listeners.BroadCastManager
+import com.amary.webview.listeners.WebViewListener
 import java.io.Serializable
 import java.util.*
 
-data class FinestWebView(
+data class AmaryWebView(
   @Transient var context: Context,
   @Transient var listeners: MutableList<WebViewListener> = ArrayList(),
 
@@ -158,7 +158,7 @@ data class FinestWebView(
   constructor(ctx: Context) : this(context = ctx)
 
   /**
-   * If you use context instead of activity, FinestWebView won't be able to override activity
+   * If you use context instead of activity, AmaryWebView won't be able to override activity
    * animation. Try to create builder with Activity if it's possible.
    */
   constructor(activity: Activity) : this(context = activity)
@@ -353,7 +353,7 @@ data class FinestWebView(
 
   fun webViewSupportMultipleWindows(webViewSupportMultipleWindows: Boolean) = apply { this.webViewSupportMultipleWindows = webViewSupportMultipleWindows }
 
-  fun webViewLayoutAlgorithm(webViewLayoutAlgorithm: LayoutAlgorithm?): FinestWebView = apply { this.webViewLayoutAlgorithm = webViewLayoutAlgorithm }
+  fun webViewLayoutAlgorithm(webViewLayoutAlgorithm: LayoutAlgorithm?): AmaryWebView = apply { this.webViewLayoutAlgorithm = webViewLayoutAlgorithm }
 
   fun webViewStandardFontFamily(webViewStandardFontFamily: String?) = apply { this.webViewStandardFontFamily = webViewStandardFontFamily }
 
@@ -448,8 +448,8 @@ data class FinestWebView(
     if (listeners.isNotEmpty()) {
       BroadCastManager(context, key!!, listeners)
     }
-    val intent = Intent(context, FinestWebViewActivity::class.java)
-    intent.putExtra("FinestWebView", this)
+    val intent = Intent(context, AmaryWebViewActivity::class.java)
+    intent.putExtra("AmaryWebView", this)
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     context.startActivity(intent)
     if (context is Activity) {

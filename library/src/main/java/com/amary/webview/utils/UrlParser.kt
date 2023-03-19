@@ -1,4 +1,4 @@
-package com.thefinestartist.finestwebview.utils
+package com.amary.webview.utils
 
 import java.net.MalformedURLException
 import java.net.URL

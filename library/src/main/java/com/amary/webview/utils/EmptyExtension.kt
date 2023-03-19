@@ -1,4 +1,4 @@
-package com.thefinestartist.finestwebview.utils
+package com.amary.webview.utils
 
 fun String?.orEmpty(): String {
     return this ?: ""

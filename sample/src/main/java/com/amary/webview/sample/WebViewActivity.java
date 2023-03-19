@@ -1,4 +1,4 @@
-package com.thefinestartist.finestwebview.sample;
+package com.amary.webview.sample;
 
 import android.os.Bundle;
 import android.webkit.WebView;

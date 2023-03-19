@@ -1,4 +1,4 @@
-package com.thefinestartist.finestwebview.views
+package com.amary.webview.views
 
 import android.content.Context
 import android.util.AttributeSet
@@ -6,7 +6,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.webkit.WebView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.thefinestartist.finestwebview.utils.UnitConverter.dpToPx
+import com.amary.webview.utils.UnitConverter.dpToPx
 
 class CustomSwipeToRefresh : SwipeRefreshLayout {
   private var webView: WebView? = null

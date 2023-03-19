@@ -39,7 +39,7 @@ You can download the latest sample APK from this repo here: [sample-release.apk]
 
 It's also on Google Play:
 
-<a href="https://play.google.com/store/apps/details?id=com.thefinestartist.finestwebview.sample" target="_blank">
+<a href="https://play.google.com/store/apps/details?id=com.amary.webview.sample" target="_blank">
   <img alt="Get it on Google Play"
       src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" height="60"/>
 </a>
@@ -62,13 +62,12 @@ FinestWebView is basically and Android activity with webview, toolbar and etc.
 You have to add FinestWebViewActivity in your `AndroidManifest.xml`
 
 ```xml
+
 <uses-permission android:name="android.permission.INTERNET" />
 
-<activity
-    android:name="com.thefinestartist.finestwebview.FinestWebViewActivity"
-    android:configChanges="keyboardHidden|orientation|screenSize"
-    android:screenOrientation="sensor"
-    android:theme="@style/FinestWebViewTheme.Light" />
+<activity android:name="com.amary.webview.AmaryWebViewActivity"
+android:configChanges="keyboardHidden|orientation|screenSize" android:screenOrientation="sensor"
+android:theme="@style/AmaryWebViewTheme.Light" />
 ```
 
 #### Basic WebView
@@ -84,7 +83,7 @@ new FinestWebView.Builder(activity).show(url);
 
 ### 1. Using Themes
 
-You can use your own Theme for FinestWebView. If you want to use pre-defined theme, use `android:theme="@style/FinestWebViewTheme"` or `android:theme="@style/FinestWebViewTheme.Fullscreen"`
+You can use your own Theme for FinestWebView. If you want to use pre-defined theme, use `android:theme="@style/AmaryWebViewTheme"` or `android:theme="@style/FinestWebViewTheme.Fullscreen"`
 
 ```xml
 <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
@@ -98,8 +97,8 @@ You can use your own Theme for FinestWebView. If you want to use pre-defined the
 ```
 
 ```xml
-<activity
-    android:name="com.thefinestartist.finestwebview.FinestWebViewActivity"
+
+<activity android:name="com.amary.webview.AmaryWebViewActivity"
     android:theme="@style/AppTheme.NoActionBar" />
 ```
 
@@ -327,7 +326,7 @@ injectJavaScript(String injectJavaScript);
 
 #### Builder Pattern
 ```java
-new FinestWebView.Builder(activity)
+new AmaryWebView.Builder(activity)
     .titleDefault("Default Title")
     .toolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS)
     .gradientDivider(false)
@@ -372,7 +371,7 @@ But, you can override theses settings using builder option `statusBarColor`, `st
 #### Disable Toolbar Collapsing
 
 ```java
-new FinestWebView.Builder(activity)
+new AmaryWebView.Builder(activity)
     .toolbarScrollFlags(0) // By sending as 0, toolbar collapsing will be disabled
     .show(url);
 ```
@@ -385,13 +384,12 @@ If you enable BuiltInZoomControls `webViewBuiltInZoomControls(true)`, it will au
 #### Full Screen Mode
 
 ```xml
+
 <style name="AppTheme.NoActionBar.FullScreen" parent="AppTheme.NoActionBar">
     <item name="android:windowContentOverlay">@null</item>
     <item name="android:windowFullscreen">true</item>
-</style>
-<activity
-    android:name="com.thefinestartist.finestwebview.FinestWebViewActivity"
-    android:theme="@style/AppTheme.NoActionBar.FullScreen" />
+</style><activity android:name="com.amary.webview.AmaryWebViewActivity"
+android:theme="@style/AppTheme.NoActionBar.FullScreen" />
 ```
 
 
@@ -400,7 +398,7 @@ If you enable BuiltInZoomControls `webViewBuiltInZoomControls(true)`, it will au
 You can use some pre-defined animations from this library or your own animations.
 
 ```java
-new FinestWebView.Builder(activity)
+new AmaryWebView.Builder(activity)
     .setCustomAnimations(R.anim.activity_open_enter, R.anim.activity_open_exit, R.anim.activity_close_enter, R.anim.activity_close_exit)
     .show(url);
 ```
@@ -421,11 +419,10 @@ Pre-defined animation sets
 Use configChange, screenOrientation to customize your orientation options
 
 ```xml
-<activity
-    android:name="com.thefinestartist.finestwebview.FinestWebViewActivity"
-    android:configChanges="keyboardHidden|orientation|screenSize"
-    android:screenOrientation="sensor"
-    android:theme="@style/FinestWebViewTheme" />
+
+<activity android:name="com.amary.webview.AmaryWebViewActivity"
+    android:configChanges="keyboardHidden|orientation|screenSize" android:screenOrientation="sensor"
+    android:theme="@style/AmaryWebViewTheme" />
 ```
 
 #### Gradient Divider
@@ -433,7 +430,7 @@ Use configChange, screenOrientation to customize your orientation options
 You can make your divider gradient. If you do, webview will be under the gradient. If you disable gradient divider, webview will be below the divider.
 
 ```java
-new FinestWebView.Builder(activity)
+new AmaryWebView.Builder(activity)
     .gradientDivider(false)
     .show(url);
 ```
@@ -444,7 +441,7 @@ new FinestWebView.Builder(activity)
 You can use your own typeface for title, url, and menus. You have to add your font file in `assets/fonts` folder.
 
 ```java
-new FinestWebView.Builder(activity)
+new AmaryWebView.Builder(activity)
     .titleFont("Roboto-Medium.ttf")
     .urlFont("Roboto-Regular.ttf")
     .menuTextFont("Roboto-Medium.ttf")
@@ -457,7 +454,7 @@ new FinestWebView.Builder(activity)
 You can use your own String resources to translate strings.
 
 ```java
-new FinestWebView.Builder(activity)
+new AmaryWebView.Builder(activity)
     .stringResCopiedToClipboard(R.string.copied_to_clipboard)
     .stringResRefresh(R.string.refresh)
     .stringResShareVia(R.string.share_via)
@@ -477,7 +474,7 @@ You can support right to left by setting `android:supportsRtl="true"` in `Androi
 </application>
 ```
 ```java
-new FinestWebView.Builder(activity)
+new AmaryWebView.Builder(activity)
     .rtl(true)
     .show(url);
 ```

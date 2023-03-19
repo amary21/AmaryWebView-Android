@@ -1,4 +1,4 @@
-package com.thefinestartist.finestwebview.utils
+package com.amary.webview.utils
 
 import android.graphics.Color
 

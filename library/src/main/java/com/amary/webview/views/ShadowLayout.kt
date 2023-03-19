@@ -1,4 +1,4 @@
-package com.thefinestartist.finestwebview.views
+package com.amary.webview.views
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -10,7 +10,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
-import com.thefinestartist.finestwebview.R
+import com.amary.webview.R
 
 class ShadowLayout : FrameLayout {
   private var shadowColor = 0

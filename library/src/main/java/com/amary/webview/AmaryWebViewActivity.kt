@@ -1,4 +1,4 @@
-package com.thefinestartist.finestwebview
+package com.amary.webview
 
 import android.annotation.SuppressLint
 import android.content.ClipData
@@ -35,30 +35,30 @@ import androidx.core.content.ContextCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
-import com.thefinestartist.finestwebview.enums.ProgressBarPosition
-import com.thefinestartist.finestwebview.listeners.BroadCastManager.Companion.onDownloadStart
-import com.thefinestartist.finestwebview.listeners.BroadCastManager.Companion.onLoadResource
-import com.thefinestartist.finestwebview.listeners.BroadCastManager.Companion.onPageCommitVisible
-import com.thefinestartist.finestwebview.listeners.BroadCastManager.Companion.onPageFinished
-import com.thefinestartist.finestwebview.listeners.BroadCastManager.Companion.onPageStarted
-import com.thefinestartist.finestwebview.listeners.BroadCastManager.Companion.onProgressChanged
-import com.thefinestartist.finestwebview.listeners.BroadCastManager.Companion.onReceivedTitle
-import com.thefinestartist.finestwebview.listeners.BroadCastManager.Companion.onReceivedTouchIconUrl
-import com.thefinestartist.finestwebview.listeners.BroadCastManager.Companion.unregister
-import com.thefinestartist.finestwebview.utils.BitmapUtil.getColoredBitmap
-import com.thefinestartist.finestwebview.utils.BitmapUtil.getGradientBitmap
-import com.thefinestartist.finestwebview.utils.ColorUtil.disableColor
-import com.thefinestartist.finestwebview.utils.DisplayUtil.getHeight
-import com.thefinestartist.finestwebview.utils.DisplayUtil.getStatusBarHeight
-import com.thefinestartist.finestwebview.utils.DisplayUtil.getWidth
-import com.thefinestartist.finestwebview.utils.TypefaceUtil
-import com.thefinestartist.finestwebview.utils.UnitConverter.dpToPx
-import com.thefinestartist.finestwebview.utils.UrlParser.getHost
-import com.thefinestartist.finestwebview.utils.orEmpty
-import com.thefinestartist.finestwebview.views.ShadowLayout
+import com.amary.webview.enums.ProgressBarPosition
+import com.amary.webview.listeners.BroadCastManager.Companion.onDownloadStart
+import com.amary.webview.listeners.BroadCastManager.Companion.onLoadResource
+import com.amary.webview.listeners.BroadCastManager.Companion.onPageCommitVisible
+import com.amary.webview.listeners.BroadCastManager.Companion.onPageFinished
+import com.amary.webview.listeners.BroadCastManager.Companion.onPageStarted
+import com.amary.webview.listeners.BroadCastManager.Companion.onProgressChanged
+import com.amary.webview.listeners.BroadCastManager.Companion.onReceivedTitle
+import com.amary.webview.listeners.BroadCastManager.Companion.onReceivedTouchIconUrl
+import com.amary.webview.listeners.BroadCastManager.Companion.unregister
+import com.amary.webview.utils.BitmapUtil.getColoredBitmap
+import com.amary.webview.utils.BitmapUtil.getGradientBitmap
+import com.amary.webview.utils.ColorUtil.disableColor
+import com.amary.webview.utils.DisplayUtil.getHeight
+import com.amary.webview.utils.DisplayUtil.getStatusBarHeight
+import com.amary.webview.utils.DisplayUtil.getWidth
+import com.amary.webview.utils.TypefaceUtil
+import com.amary.webview.utils.UnitConverter.dpToPx
+import com.amary.webview.utils.UrlParser.getHost
+import com.amary.webview.utils.orEmpty
+import com.amary.webview.views.ShadowLayout
 import kotlin.math.abs
 
-class FinestWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener, View.OnClickListener {
+class AmaryWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener, View.OnClickListener {
 
   private var key = 0
 
@@ -217,16 +217,16 @@ class FinestWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedL
   private var webLayout: FrameLayout? = null
 
   private var downloadListener = DownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->
-    onDownloadStart(this@FinestWebViewActivity, key, url, userAgent, contentDisposition, mimetype, contentLength)
+    onDownloadStart(this@AmaryWebViewActivity, key, url, userAgent, contentDisposition, mimetype, contentLength)
   }
 
   @SuppressLint("ResourceType")
   private fun initializeOptions() {
     val intent = intent ?: return
-    val finestWebView = intent.getSerializableExtra("FinestWebView") as FinestWebView?
+    val amaryWebView = intent.getSerializableExtra("AmaryWebView") as AmaryWebView?
 
     // set theme before resolving attributes depending on those
-    setTheme((finestWebView?.theme.orEmpty()))
+    setTheme((amaryWebView?.theme.orEmpty()))
 
     // resolve themed attributes
     val typedValue = TypedValue()
@@ -239,119 +239,119 @@ class FinestWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedL
     val selectableItemBackground = typedArray.getResourceId(5, 0)
     val selectableItemBackgroundBorderless = typedArray.getResourceId(6, 0)
     typedArray.recycle()
-    key = finestWebView?.key.orEmpty()
-    rtl = finestWebView?.rtl ?: resources.getBoolean(R.bool.is_right_to_left)
-    statusBarColor = finestWebView?.statusBarColor ?: colorPrimaryDark
-    toolbarColor = finestWebView?.toolbarColor ?: colorPrimary
-    toolbarScrollFlags = finestWebView?.toolbarScrollFlags ?: (AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS)
-    iconDefaultColor = finestWebView?.iconDefaultColor ?: colorAccent
-    iconDisabledColor = finestWebView?.iconDisabledColor ?: disableColor(iconDefaultColor)
-    iconPressedColor = finestWebView?.iconPressedColor ?: iconDefaultColor
-    iconSelector = finestWebView?.iconSelector ?: selectableItemBackgroundBorderless
-    showIconClose = finestWebView?.showIconClose ?: true
-    disableIconClose = finestWebView?.disableIconClose ?: false
-    showIconBack = finestWebView?.showIconBack ?: true
-    disableIconBack = finestWebView?.disableIconBack ?: false
-    showIconForward = finestWebView?.showIconForward ?: true
-    disableIconForward = finestWebView?.disableIconForward ?: false
-    showIconMenu = finestWebView?.showIconMenu ?: true
-    disableIconMenu = finestWebView?.disableIconMenu ?: false
-    showSwipeRefreshLayout = finestWebView?.showSwipeRefreshLayout ?: true
-    swipeRefreshColor = finestWebView?.swipeRefreshColor ?: colorAccent
-    if (finestWebView?.swipeRefreshColors != null) {
-      val colors = finestWebView.swipeRefreshColors?.size?.let { IntArray(it) }
-      finestWebView.swipeRefreshColors?.forEachIndexed { index, i ->
+    key = amaryWebView?.key.orEmpty()
+    rtl = amaryWebView?.rtl ?: resources.getBoolean(R.bool.is_right_to_left)
+    statusBarColor = amaryWebView?.statusBarColor ?: colorPrimaryDark
+    toolbarColor = amaryWebView?.toolbarColor ?: colorPrimary
+    toolbarScrollFlags = amaryWebView?.toolbarScrollFlags ?: (AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS)
+    iconDefaultColor = amaryWebView?.iconDefaultColor ?: colorAccent
+    iconDisabledColor = amaryWebView?.iconDisabledColor ?: disableColor(iconDefaultColor)
+    iconPressedColor = amaryWebView?.iconPressedColor ?: iconDefaultColor
+    iconSelector = amaryWebView?.iconSelector ?: selectableItemBackgroundBorderless
+    showIconClose = amaryWebView?.showIconClose ?: true
+    disableIconClose = amaryWebView?.disableIconClose ?: false
+    showIconBack = amaryWebView?.showIconBack ?: true
+    disableIconBack = amaryWebView?.disableIconBack ?: false
+    showIconForward = amaryWebView?.showIconForward ?: true
+    disableIconForward = amaryWebView?.disableIconForward ?: false
+    showIconMenu = amaryWebView?.showIconMenu ?: true
+    disableIconMenu = amaryWebView?.disableIconMenu ?: false
+    showSwipeRefreshLayout = amaryWebView?.showSwipeRefreshLayout ?: true
+    swipeRefreshColor = amaryWebView?.swipeRefreshColor ?: colorAccent
+    if (amaryWebView?.swipeRefreshColors != null) {
+      val colors = amaryWebView.swipeRefreshColors?.size?.let { IntArray(it) }
+      amaryWebView.swipeRefreshColors?.forEachIndexed { index, i ->
         colors?.set(index, i)
       }
       swipeRefreshColors = colors
     }
-    showDivider = finestWebView?.showDivider ?: true
-    gradientDivider = finestWebView?.gradientDivider ?: true
-    dividerColor = finestWebView?.dividerColor ?: ContextCompat.getColor(this, R.color.finestBlack10)
-    dividerHeight = finestWebView?.dividerHeight ?: resources.getDimension(R.dimen.defaultDividerHeight)
-    showProgressBar = finestWebView?.showProgressBar ?: true
-    progressBarColor = finestWebView?.progressBarColor ?: colorAccent
-    progressBarHeight = finestWebView?.progressBarHeight ?: resources.getDimension(R.dimen.defaultProgressBarHeight)
-    progressBarPosition = finestWebView?.progressBarPosition ?: ProgressBarPosition.BOTTOM_OF_TOOLBAR
-    titleDefault = finestWebView?.titleDefault
-    updateTitleFromHtml = finestWebView?.updateTitleFromHtml ?: true
-    titleSize = finestWebView?.titleSize ?: resources.getDimension(R.dimen.defaultTitleSize)
-    titleFont = finestWebView?.titleFont ?: "Roboto-Medium.ttf"
-    finestWebViewTitleColor = finestWebView?.titleColor ?: textColorPrimary
-    showUrl = finestWebView?.showUrl ?: true
-    urlSize = finestWebView?.urlSize ?: resources.getDimension(R.dimen.defaultUrlSize)
-    urlFont = finestWebView?.urlFont ?: "Roboto-Regular.ttf"
-    urlColor = finestWebView?.urlColor ?: textColorSecondary
-    menuColor = finestWebView?.menuColor ?: ContextCompat.getColor(this, R.color.finestWhite)
-    menuDropShadowColor = finestWebView?.menuDropShadowColor ?: ContextCompat.getColor(this, R.color.finestBlack10)
-    menuDropShadowSize = finestWebView?.menuDropShadowSize ?: resources.getDimension(R.dimen.defaultMenuDropShadowSize)
-    menuSelector = finestWebView?.menuSelector ?: selectableItemBackground
-    menuTextSize = finestWebView?.menuTextSize ?: resources.getDimension(R.dimen.defaultMenuTextSize)
-    menuTextFont = finestWebView?.menuTextFont ?: "Roboto-Regular.ttf"
-    menuTextColor = finestWebView?.menuTextColor ?: ContextCompat.getColor(this, R.color.finestBlack)
-    menuTextGravity = finestWebView?.menuTextGravity ?: (Gravity.CENTER_VERTICAL or Gravity.START)
-    menuTextPaddingLeft = finestWebView?.menuTextPaddingLeft ?: (if (rtl) resources.getDimension(R.dimen.defaultMenuTextPaddingRight) else resources.getDimension(R.dimen.defaultMenuTextPaddingLeft))
-    menuTextPaddingRight = finestWebView?.menuTextPaddingRight ?: (if (rtl) resources.getDimension(R.dimen.defaultMenuTextPaddingLeft) else resources.getDimension(R.dimen.defaultMenuTextPaddingRight))
-    showMenuRefresh = finestWebView?.showMenuRefresh ?: true
-    stringResRefresh = finestWebView?.stringResRefresh ?: R.string.refresh
-    showMenuFind = finestWebView?.showMenuFind ?: false
-    stringResFind = finestWebView?.stringResFind ?: R.string.find
-    showMenuShareVia = finestWebView?.showMenuShareVia ?: true
-    stringResShareVia = finestWebView?.stringResShareVia ?: R.string.share_via
-    showMenuCopyLink = finestWebView?.showMenuCopyLink ?: true
-    stringResCopyLink = finestWebView?.stringResCopyLink ?: R.string.copy_link
-    showMenuOpenWith = finestWebView?.showMenuOpenWith ?: true
-    stringResOpenWith = finestWebView?.stringResOpenWith ?: R.string.open_with
-    animationCloseEnter = finestWebView?.animationCloseEnter ?: R.anim.modal_activity_close_enter
-    animationCloseExit = finestWebView?.animationCloseExit ?: R.anim.modal_activity_close_exit
-    backPressToClose = finestWebView?.backPressToClose ?: false
-    stringResCopiedToClipboard = finestWebView?.stringResCopiedToClipboard ?: R.string.copied_to_clipboard
-    webViewSupportZoom = finestWebView?.webViewSupportZoom
-    webViewMediaPlaybackRequiresUserGesture = finestWebView?.webViewMediaPlaybackRequiresUserGesture
-    webViewBuiltInZoomControls = finestWebView?.webViewBuiltInZoomControls ?: false
-    webViewDisplayZoomControls = finestWebView?.webViewDisplayZoomControls ?: false
-    webViewAllowFileAccess = finestWebView?.webViewAllowFileAccess ?: true
-    webViewAllowContentAccess = finestWebView?.webViewAllowContentAccess
-    webViewLoadWithOverviewMode = finestWebView?.webViewLoadWithOverviewMode ?: true
-    webViewSaveFormData = finestWebView?.webViewSaveFormData
-    webViewTextZoom = finestWebView?.webViewTextZoom
-    webViewUseWideViewPort = finestWebView?.webViewUseWideViewPort
-    webViewSupportMultipleWindows = finestWebView?.webViewSupportMultipleWindows
-    webViewLayoutAlgorithm = finestWebView?.webViewLayoutAlgorithm
-    webViewStandardFontFamily = finestWebView?.webViewStandardFontFamily
-    webViewFixedFontFamily = finestWebView?.webViewFixedFontFamily
-    webViewSansSerifFontFamily = finestWebView?.webViewSansSerifFontFamily
-    webViewSerifFontFamily = finestWebView?.webViewSerifFontFamily
-    webViewCursiveFontFamily = finestWebView?.webViewCursiveFontFamily
-    webViewFantasyFontFamily = finestWebView?.webViewFantasyFontFamily
-    webViewMinimumFontSize = finestWebView?.webViewMinimumFontSize
-    webViewMinimumLogicalFontSize = finestWebView?.webViewMinimumLogicalFontSize
-    webViewDefaultFontSize = finestWebView?.webViewDefaultFontSize
-    webViewDefaultFixedFontSize = finestWebView?.webViewDefaultFixedFontSize
-    webViewLoadsImagesAutomatically = finestWebView?.webViewLoadsImagesAutomatically
-    webViewBlockNetworkImage = finestWebView?.webViewBlockNetworkImage
-    webViewBlockNetworkLoads = finestWebView?.webViewBlockNetworkLoads
-    webViewJavaScriptEnabled = finestWebView?.webViewJavaScriptEnabled ?: true
-    webViewAllowUniversalAccessFromFileURLs = finestWebView?.webViewAllowUniversalAccessFromFileURLs
-    webViewAllowFileAccessFromFileURLs = finestWebView?.webViewAllowFileAccessFromFileURLs
-    webViewGeolocationDatabasePath = finestWebView?.webViewGeolocationDatabasePath
-    webViewAppCacheEnabled = finestWebView?.webViewAppCacheEnabled ?: true
-    webViewAppCachePath = finestWebView?.webViewAppCachePath
-    webViewDatabaseEnabled = finestWebView?.webViewDatabaseEnabled
-    webViewDomStorageEnabled = finestWebView?.webViewDomStorageEnabled ?: true
-    webViewGeolocationEnabled = finestWebView?.webViewGeolocationEnabled
-    webViewJavaScriptCanOpenWindowsAutomatically = finestWebView?.webViewJavaScriptCanOpenWindowsAutomatically
-    webViewDefaultTextEncodingName = finestWebView?.webViewDefaultTextEncodingName
-    webViewUserAgentString = finestWebView?.webViewUserAgentString
-    webViewNeedInitialFocus = finestWebView?.webViewNeedInitialFocus
-    webViewCacheMode = finestWebView?.webViewCacheMode
-    webViewMixedContentMode = finestWebView?.webViewMixedContentMode
-    webViewOffscreenPreRaster = finestWebView?.webViewOffscreenPreRaster
-    injectJavaScript = finestWebView?.injectJavaScript
-    mimeType = finestWebView?.mimeType
-    encoding = finestWebView?.encoding
-    data = finestWebView?.data
-    url = finestWebView?.url
+    showDivider = amaryWebView?.showDivider ?: true
+    gradientDivider = amaryWebView?.gradientDivider ?: true
+    dividerColor = amaryWebView?.dividerColor ?: ContextCompat.getColor(this, R.color.finestBlack10)
+    dividerHeight = amaryWebView?.dividerHeight ?: resources.getDimension(R.dimen.defaultDividerHeight)
+    showProgressBar = amaryWebView?.showProgressBar ?: true
+    progressBarColor = amaryWebView?.progressBarColor ?: colorAccent
+    progressBarHeight = amaryWebView?.progressBarHeight ?: resources.getDimension(R.dimen.defaultProgressBarHeight)
+    progressBarPosition = amaryWebView?.progressBarPosition ?: ProgressBarPosition.BOTTOM_OF_TOOLBAR
+    titleDefault = amaryWebView?.titleDefault
+    updateTitleFromHtml = amaryWebView?.updateTitleFromHtml ?: true
+    titleSize = amaryWebView?.titleSize ?: resources.getDimension(R.dimen.defaultTitleSize)
+    titleFont = amaryWebView?.titleFont ?: "Roboto-Medium.ttf"
+    finestWebViewTitleColor = amaryWebView?.titleColor ?: textColorPrimary
+    showUrl = amaryWebView?.showUrl ?: true
+    urlSize = amaryWebView?.urlSize ?: resources.getDimension(R.dimen.defaultUrlSize)
+    urlFont = amaryWebView?.urlFont ?: "Roboto-Regular.ttf"
+    urlColor = amaryWebView?.urlColor ?: textColorSecondary
+    menuColor = amaryWebView?.menuColor ?: ContextCompat.getColor(this, R.color.finestWhite)
+    menuDropShadowColor = amaryWebView?.menuDropShadowColor ?: ContextCompat.getColor(this, R.color.finestBlack10)
+    menuDropShadowSize = amaryWebView?.menuDropShadowSize ?: resources.getDimension(R.dimen.defaultMenuDropShadowSize)
+    menuSelector = amaryWebView?.menuSelector ?: selectableItemBackground
+    menuTextSize = amaryWebView?.menuTextSize ?: resources.getDimension(R.dimen.defaultMenuTextSize)
+    menuTextFont = amaryWebView?.menuTextFont ?: "Roboto-Regular.ttf"
+    menuTextColor = amaryWebView?.menuTextColor ?: ContextCompat.getColor(this, R.color.finestBlack)
+    menuTextGravity = amaryWebView?.menuTextGravity ?: (Gravity.CENTER_VERTICAL or Gravity.START)
+    menuTextPaddingLeft = amaryWebView?.menuTextPaddingLeft ?: (if (rtl) resources.getDimension(R.dimen.defaultMenuTextPaddingRight) else resources.getDimension(R.dimen.defaultMenuTextPaddingLeft))
+    menuTextPaddingRight = amaryWebView?.menuTextPaddingRight ?: (if (rtl) resources.getDimension(R.dimen.defaultMenuTextPaddingLeft) else resources.getDimension(R.dimen.defaultMenuTextPaddingRight))
+    showMenuRefresh = amaryWebView?.showMenuRefresh ?: true
+    stringResRefresh = amaryWebView?.stringResRefresh ?: R.string.refresh
+    showMenuFind = amaryWebView?.showMenuFind ?: false
+    stringResFind = amaryWebView?.stringResFind ?: R.string.find
+    showMenuShareVia = amaryWebView?.showMenuShareVia ?: true
+    stringResShareVia = amaryWebView?.stringResShareVia ?: R.string.share_via
+    showMenuCopyLink = amaryWebView?.showMenuCopyLink ?: true
+    stringResCopyLink = amaryWebView?.stringResCopyLink ?: R.string.copy_link
+    showMenuOpenWith = amaryWebView?.showMenuOpenWith ?: true
+    stringResOpenWith = amaryWebView?.stringResOpenWith ?: R.string.open_with
+    animationCloseEnter = amaryWebView?.animationCloseEnter ?: R.anim.modal_activity_close_enter
+    animationCloseExit = amaryWebView?.animationCloseExit ?: R.anim.modal_activity_close_exit
+    backPressToClose = amaryWebView?.backPressToClose ?: false
+    stringResCopiedToClipboard = amaryWebView?.stringResCopiedToClipboard ?: R.string.copied_to_clipboard
+    webViewSupportZoom = amaryWebView?.webViewSupportZoom
+    webViewMediaPlaybackRequiresUserGesture = amaryWebView?.webViewMediaPlaybackRequiresUserGesture
+    webViewBuiltInZoomControls = amaryWebView?.webViewBuiltInZoomControls ?: false
+    webViewDisplayZoomControls = amaryWebView?.webViewDisplayZoomControls ?: false
+    webViewAllowFileAccess = amaryWebView?.webViewAllowFileAccess ?: true
+    webViewAllowContentAccess = amaryWebView?.webViewAllowContentAccess
+    webViewLoadWithOverviewMode = amaryWebView?.webViewLoadWithOverviewMode ?: true
+    webViewSaveFormData = amaryWebView?.webViewSaveFormData
+    webViewTextZoom = amaryWebView?.webViewTextZoom
+    webViewUseWideViewPort = amaryWebView?.webViewUseWideViewPort
+    webViewSupportMultipleWindows = amaryWebView?.webViewSupportMultipleWindows
+    webViewLayoutAlgorithm = amaryWebView?.webViewLayoutAlgorithm
+    webViewStandardFontFamily = amaryWebView?.webViewStandardFontFamily
+    webViewFixedFontFamily = amaryWebView?.webViewFixedFontFamily
+    webViewSansSerifFontFamily = amaryWebView?.webViewSansSerifFontFamily
+    webViewSerifFontFamily = amaryWebView?.webViewSerifFontFamily
+    webViewCursiveFontFamily = amaryWebView?.webViewCursiveFontFamily
+    webViewFantasyFontFamily = amaryWebView?.webViewFantasyFontFamily
+    webViewMinimumFontSize = amaryWebView?.webViewMinimumFontSize
+    webViewMinimumLogicalFontSize = amaryWebView?.webViewMinimumLogicalFontSize
+    webViewDefaultFontSize = amaryWebView?.webViewDefaultFontSize
+    webViewDefaultFixedFontSize = amaryWebView?.webViewDefaultFixedFontSize
+    webViewLoadsImagesAutomatically = amaryWebView?.webViewLoadsImagesAutomatically
+    webViewBlockNetworkImage = amaryWebView?.webViewBlockNetworkImage
+    webViewBlockNetworkLoads = amaryWebView?.webViewBlockNetworkLoads
+    webViewJavaScriptEnabled = amaryWebView?.webViewJavaScriptEnabled ?: true
+    webViewAllowUniversalAccessFromFileURLs = amaryWebView?.webViewAllowUniversalAccessFromFileURLs
+    webViewAllowFileAccessFromFileURLs = amaryWebView?.webViewAllowFileAccessFromFileURLs
+    webViewGeolocationDatabasePath = amaryWebView?.webViewGeolocationDatabasePath
+    webViewAppCacheEnabled = amaryWebView?.webViewAppCacheEnabled ?: true
+    webViewAppCachePath = amaryWebView?.webViewAppCachePath
+    webViewDatabaseEnabled = amaryWebView?.webViewDatabaseEnabled
+    webViewDomStorageEnabled = amaryWebView?.webViewDomStorageEnabled ?: true
+    webViewGeolocationEnabled = amaryWebView?.webViewGeolocationEnabled
+    webViewJavaScriptCanOpenWindowsAutomatically = amaryWebView?.webViewJavaScriptCanOpenWindowsAutomatically
+    webViewDefaultTextEncodingName = amaryWebView?.webViewDefaultTextEncodingName
+    webViewUserAgentString = amaryWebView?.webViewUserAgentString
+    webViewNeedInitialFocus = amaryWebView?.webViewNeedInitialFocus
+    webViewCacheMode = amaryWebView?.webViewCacheMode
+    webViewMixedContentMode = amaryWebView?.webViewMixedContentMode
+    webViewOffscreenPreRaster = amaryWebView?.webViewOffscreenPreRaster
+    injectJavaScript = amaryWebView?.injectJavaScript
+    mimeType = amaryWebView?.mimeType
+    encoding = amaryWebView?.encoding
+    data = amaryWebView?.data
+    url = amaryWebView?.url
   }
 
   private fun bindViews() {
@@ -852,7 +852,7 @@ class FinestWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedL
 
   override fun onDestroy() {
     super.onDestroy()
-    unregister(this@FinestWebViewActivity, key)
+    unregister(this@AmaryWebViewActivity, key)
     if (webView == null) {
       return
     }
@@ -874,7 +874,7 @@ class FinestWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedL
   inner class MyWebChromeClient : WebChromeClient() {
     override fun onProgressChanged(view: WebView, progress: Int) {
       var progress = progress
-      onProgressChanged(this@FinestWebViewActivity, key, progress)
+      onProgressChanged(this@AmaryWebViewActivity, key, progress)
       if (showSwipeRefreshLayout) {
         if (swipeRefreshLayout?.isRefreshing == true && progress == 100) {
           swipeRefreshLayout?.post { swipeRefreshLayout?.isRefreshing = false }
@@ -890,24 +890,24 @@ class FinestWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedL
     }
 
     override fun onReceivedTitle(view: WebView, title: String) {
-      onReceivedTitle(this@FinestWebViewActivity, key, title)
+      onReceivedTitle(this@AmaryWebViewActivity, key, title)
     }
 
     override fun onReceivedTouchIconUrl(view: WebView, url: String, precomposed: Boolean) {
-      onReceivedTouchIconUrl(this@FinestWebViewActivity, key, url, precomposed)
+      onReceivedTouchIconUrl(this@AmaryWebViewActivity, key, url, precomposed)
     }
   }
 
   inner class MyWebViewClient : WebViewClient() {
     override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
-      onPageStarted(this@FinestWebViewActivity, key, url)
+      onPageStarted(this@AmaryWebViewActivity, key, url)
       if (!url.contains("docs.google.com") && url.endsWith(".pdf")) {
         webView?.loadUrl("http://docs.google.com/gview?embedded=true&url=$url")
       }
     }
 
     override fun onPageFinished(view: WebView, url: String) {
-      onPageFinished(this@FinestWebViewActivity, key, url)
+      onPageFinished(this@AmaryWebViewActivity, key, url)
       if (updateTitleFromHtml) {
         title?.text = view.title
       }
@@ -955,11 +955,11 @@ class FinestWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedL
     }
 
     override fun onLoadResource(view: WebView, url: String) {
-      onLoadResource(this@FinestWebViewActivity, key, url)
+      onLoadResource(this@AmaryWebViewActivity, key, url)
     }
 
     override fun onPageCommitVisible(view: WebView, url: String) {
-      onPageCommitVisible(this@FinestWebViewActivity, key, url)
+      onPageCommitVisible(this@AmaryWebViewActivity, key, url)
     }
   }
 }
