@@ -1,4 +1,4 @@
-package com.amary.webview
+package com.amary.amarywebview
 
 import android.annotation.SuppressLint
 import android.content.ClipData
@@ -35,27 +35,27 @@ import androidx.core.content.ContextCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
-import com.amary.webview.enums.ProgressBarPosition
-import com.amary.webview.listeners.BroadCastManager.Companion.onDownloadStart
-import com.amary.webview.listeners.BroadCastManager.Companion.onLoadResource
-import com.amary.webview.listeners.BroadCastManager.Companion.onPageCommitVisible
-import com.amary.webview.listeners.BroadCastManager.Companion.onPageFinished
-import com.amary.webview.listeners.BroadCastManager.Companion.onPageStarted
-import com.amary.webview.listeners.BroadCastManager.Companion.onProgressChanged
-import com.amary.webview.listeners.BroadCastManager.Companion.onReceivedTitle
-import com.amary.webview.listeners.BroadCastManager.Companion.onReceivedTouchIconUrl
-import com.amary.webview.listeners.BroadCastManager.Companion.unregister
-import com.amary.webview.utils.BitmapUtil.getColoredBitmap
-import com.amary.webview.utils.BitmapUtil.getGradientBitmap
-import com.amary.webview.utils.ColorUtil.disableColor
-import com.amary.webview.utils.DisplayUtil.getHeight
-import com.amary.webview.utils.DisplayUtil.getStatusBarHeight
-import com.amary.webview.utils.DisplayUtil.getWidth
-import com.amary.webview.utils.TypefaceUtil
-import com.amary.webview.utils.UnitConverter.dpToPx
-import com.amary.webview.utils.UrlParser.getHost
-import com.amary.webview.utils.orEmpty
-import com.amary.webview.views.ShadowLayout
+import com.amary.amarywebview.enums.ProgressBarPosition
+import com.amary.amarywebview.listeners.BroadCastManager.Companion.onDownloadStart
+import com.amary.amarywebview.listeners.BroadCastManager.Companion.onLoadResource
+import com.amary.amarywebview.listeners.BroadCastManager.Companion.onPageCommitVisible
+import com.amary.amarywebview.listeners.BroadCastManager.Companion.onPageFinished
+import com.amary.amarywebview.listeners.BroadCastManager.Companion.onPageStarted
+import com.amary.amarywebview.listeners.BroadCastManager.Companion.onProgressChanged
+import com.amary.amarywebview.listeners.BroadCastManager.Companion.onReceivedTitle
+import com.amary.amarywebview.listeners.BroadCastManager.Companion.onReceivedTouchIconUrl
+import com.amary.amarywebview.listeners.BroadCastManager.Companion.unregister
+import com.amary.amarywebview.utils.BitmapUtil.getColoredBitmap
+import com.amary.amarywebview.utils.BitmapUtil.getGradientBitmap
+import com.amary.amarywebview.utils.ColorUtil.disableColor
+import com.amary.amarywebview.utils.DisplayUtil.getHeight
+import com.amary.amarywebview.utils.DisplayUtil.getStatusBarHeight
+import com.amary.amarywebview.utils.DisplayUtil.getWidth
+import com.amary.amarywebview.utils.TypefaceUtil
+import com.amary.amarywebview.utils.UnitConverter.dpToPx
+import com.amary.amarywebview.utils.UrlParser.getHost
+import com.amary.amarywebview.utils.orEmpty
+import com.amary.amarywebview.views.ShadowLayout
 import kotlin.math.abs
 
 class AmaryWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener, View.OnClickListener {
@@ -230,7 +230,15 @@ class AmaryWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
 
     // resolve themed attributes
     val typedValue = TypedValue()
-    val typedArray = obtainStyledAttributes(typedValue.data, intArrayOf(R.attr.colorPrimaryDark, R.attr.colorPrimary, R.attr.colorAccent, android.R.attr.textColorPrimary, android.R.attr.textColorSecondary, android.R.attr.selectableItemBackground, android.R.attr.selectableItemBackgroundBorderless))
+    val typedArray = obtainStyledAttributes(typedValue.data, intArrayOf(
+      androidx.appcompat.R.attr.colorPrimaryDark,
+      androidx.appcompat.R.attr.colorPrimary,
+      androidx.appcompat.R.attr.colorAccent,
+      android.R.attr.textColorPrimary,
+      android.R.attr.textColorSecondary,
+      android.R.attr.selectableItemBackground,
+      android.R.attr.selectableItemBackgroundBorderless
+    ))
     val colorPrimaryDark = typedArray.getColor(0, ContextCompat.getColor(this, R.color.finestGray))
     val colorPrimary = typedArray.getColor(1, ContextCompat.getColor(this, R.color.finestWhite))
     val colorAccent = typedArray.getColor(2, ContextCompat.getColor(this, R.color.finestBlack))
@@ -438,6 +446,7 @@ class AmaryWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
         ProgressBarPosition.BOTTOM_OF_TOOLBAR -> params.setMargins(0, toolbarHeight.toInt() - progressBarHeight.toInt(), 0, 0)
         ProgressBarPosition.TOP_OF_WEBVIEW -> params.setMargins(0, toolbarHeight.toInt(), 0, 0)
         ProgressBarPosition.BOTTOM_OF_WEBVIEW -> params.setMargins(0, getHeight(this) - progressBarHeight.toInt(), 0, 0)
+        else -> Unit
       }
       progressBar?.layoutParams = params
     }
@@ -541,8 +550,6 @@ class AmaryWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
         webViewAllowUniversalAccessFromFileURLs?.let { allowUniversalAccessFromFileURLs = it }
         webViewAllowFileAccessFromFileURLs?.let { allowFileAccessFromFileURLs = it }
         webViewGeolocationDatabasePath?.let { setGeolocationDatabasePath(it) }
-        webViewAppCacheEnabled?.let { setAppCacheEnabled(it) }
-        webViewAppCachePath?.let { setAppCachePath(it) }
         webViewDatabaseEnabled?.let { databaseEnabled = it }
         webViewDomStorageEnabled?.let { domStorageEnabled = it }
         webViewGeolocationEnabled?.let { webViewGeolocationEnabled = it }
@@ -605,6 +612,7 @@ class AmaryWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
         ProgressBarPosition.BOTTOM_OF_TOOLBAR -> params.setMargins(0, toolbarHeight.toInt() - progressBarHeight.toInt(), 0, 0)
         ProgressBarPosition.TOP_OF_WEBVIEW -> params.setMargins(0, toolbarHeight.toInt(), 0, 0)
         ProgressBarPosition.BOTTOM_OF_WEBVIEW -> params.setMargins(0, getHeight(this) - progressBarHeight.toInt(), 0, 0)
+        else -> Unit
       }
       progressBar?.layoutParams = params
     }

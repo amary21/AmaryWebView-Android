@@ -39,7 +39,7 @@ You can download the latest sample APK from this repo here: [sample-release.apk]
 
 It's also on Google Play:
 
-<a href="https://play.google.com/store/apps/details?id=com.amary.webview.sample" target="_blank">
+<a href="https://play.google.com/store/apps/details?id=com.amary.amarywebview.sample" target="_blank">
   <img alt="Get it on Google Play"
       src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" height="60"/>
 </a>
@@ -65,7 +65,7 @@ You have to add FinestWebViewActivity in your `AndroidManifest.xml`
 
 <uses-permission android:name="android.permission.INTERNET" />
 
-<activity android:name="com.amary.webview.AmaryWebViewActivity"
+<activity android:name="com.amary.amarywebview.AmaryWebViewActivity"
 android:configChanges="keyboardHidden|orientation|screenSize" android:screenOrientation="sensor"
 android:theme="@style/AmaryWebViewTheme.Light" />
 ```
@@ -98,7 +98,7 @@ You can use your own Theme for FinestWebView. If you want to use pre-defined the
 
 ```xml
 
-<activity android:name="com.amary.webview.AmaryWebViewActivity"
+<activity android:name="com.amary.amarywebview.AmaryWebViewActivity"
     android:theme="@style/AppTheme.NoActionBar" />
 ```
 
@@ -388,7 +388,7 @@ If you enable BuiltInZoomControls `webViewBuiltInZoomControls(true)`, it will au
 <style name="AppTheme.NoActionBar.FullScreen" parent="AppTheme.NoActionBar">
     <item name="android:windowContentOverlay">@null</item>
     <item name="android:windowFullscreen">true</item>
-</style><activity android:name="com.amary.webview.AmaryWebViewActivity"
+</style><activity android:name="com.amary.amarywebview.AmaryWebViewActivity"
 android:theme="@style/AppTheme.NoActionBar.FullScreen" />
 ```
 
@@ -420,7 +420,7 @@ Use configChange, screenOrientation to customize your orientation options
 
 ```xml
 
-<activity android:name="com.amary.webview.AmaryWebViewActivity"
+<activity android:name="com.amary.amarywebview.AmaryWebViewActivity"
     android:configChanges="keyboardHidden|orientation|screenSize" android:screenOrientation="sensor"
     android:theme="@style/AmaryWebViewTheme" />
 ```

@@ -1,4 +1,4 @@
-package com.amary.webview.enums
+package com.amary.amarywebview.enums
 
 enum class ProgressBarPosition {
   TOP_OF_TOOLBAR,

@@ -1,4 +1,4 @@
-package com.amary.webview.utils
+package com.amary.amarywebview.utils
 
 import java.net.MalformedURLException
 import java.net.URL

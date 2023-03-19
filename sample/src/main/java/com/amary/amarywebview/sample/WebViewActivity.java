@@ -1,4 +1,4 @@
-package com.amary.webview.sample;
+package com.amary.amarywebview.sample;
 
 import android.os.Bundle;
 import android.webkit.WebView;

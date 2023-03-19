@@ -1,4 +1,4 @@
-package com.amary.webview.utils
+package com.amary.amarywebview.utils
 
 fun String?.orEmpty(): String {
     return this ?: ""

@@ -1,45 +1,53 @@
-apply from: rootProject.file('dependencies.gradle')
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'com.novoda.bintray-release'
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+final VERSION_MAJOR = 0
+final VERSION_MINOR = 0
+final VERSION_PATCH = 1
 
 android {
-    compileSdkVersion versions.compileSdk
-    buildToolsVersion versions.buildTools
+    namespace 'com.amary.amarywebview'
+    compileSdk 33
 
     defaultConfig {
-        minSdkVersion versions.minSdk
-        targetSdkVersion versions.compileSdk
-        versionCode versions.publishVersionCode
-        versionName versions.publishVersion
-        vectorDrawables.useSupportLibrary = true
+        minSdk 21
+        targetSdk 33
+        versionCode getVersionCode(VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH)
+        versionName getVersionName(VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH)
+        multiDexEnabled true
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
     }
 
-    lintOptions {
-        abortOnError false
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation deps.androidx.appcompat
-    implementation deps.androidx.coordinatorlayout
-    implementation deps.androidx.swiperefreshlayout
-    implementation deps.material
-    implementation deps.kotlin.stdlib8
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 }
 
-publish {
-    userOrg = 'thefinestartist'
-    groupId = 'com.thefinestartist'
-    artifactId = 'finestwebview'
-    publishVersion = versions.publishVersion
-    desc = 'Beautiful and customizable Android Activity that shows web pages within an app.'
-    website = 'https://finestwebview.com'
+private static int getVersionCode(int major, int minor, int patch){
+    return major * 100000 + minor * 10000  + patch
 }
 
-repositories {
-    mavenCentral()
+private static String getVersionName(int major, int minor, int patch){
+    return "${major}.${minor}.${patch}"
 }
-
-//$ ./gradlew clean build bintrayUpload -PbintrayUser=thefinestartist -PbintrayKey=BINTRAY_KEY -PdryRun=false

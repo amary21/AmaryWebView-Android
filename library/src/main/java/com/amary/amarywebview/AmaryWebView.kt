@@ -1,4 +1,4 @@
-package com.amary.webview
+package com.amary.amarywebview
 
 import android.app.Activity
 import android.content.Context
@@ -14,9 +14,9 @@ import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.core.content.ContextCompat
 import com.google.android.material.appbar.AppBarLayout.LayoutParams.*
-import com.amary.webview.enums.ProgressBarPosition
-import com.amary.webview.listeners.BroadCastManager
-import com.amary.webview.listeners.WebViewListener
+import com.amary.amarywebview.enums.ProgressBarPosition
+import com.amary.amarywebview.listeners.BroadCastManager
+import com.amary.amarywebview.listeners.WebViewListener
 import java.io.Serializable
 import java.util.*
 

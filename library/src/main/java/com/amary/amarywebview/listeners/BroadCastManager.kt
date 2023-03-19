@@ -1,4 +1,4 @@
-package com.amary.webview.listeners
+package com.amary.amarywebview.listeners
 
 import android.content.BroadcastReceiver
 import android.content.Context

@@ -1,4 +1,4 @@
-package com.amary.webview.utils
+package com.amary.amarywebview.utils
 
 import android.content.Context
 
