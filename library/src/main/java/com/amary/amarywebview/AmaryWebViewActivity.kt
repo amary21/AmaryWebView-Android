@@ -15,6 +15,7 @@ import android.net.Uri
 import android.os.Build.*
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.TypedValue
 import android.view.*
 import android.view.animation.Animation
@@ -22,6 +23,8 @@ import android.view.animation.Animation.*
 import android.view.animation.AnimationUtils
 import android.webkit.DownloadListener
 import android.webkit.WebChromeClient
+import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebSettings.*
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -33,9 +36,11 @@ import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.snackbar.Snackbar
 import com.amary.amarywebview.enums.ProgressBarPosition
+import com.amary.amarywebview.helpers.ChuckerListener
+import com.amary.amarywebview.helpers.ChuckerWebViewClient
+import com.amary.amarywebview.helpers.PayloadRecorder
+import com.amary.amarywebview.helpers.SetupInstance
 import com.amary.amarywebview.listeners.BroadCastManager.Companion.onDownloadStart
 import com.amary.amarywebview.listeners.BroadCastManager.Companion.onLoadResource
 import com.amary.amarywebview.listeners.BroadCastManager.Companion.onPageCommitVisible
@@ -56,6 +61,9 @@ import com.amary.amarywebview.utils.UnitConverter.dpToPx
 import com.amary.amarywebview.utils.UrlParser.getHost
 import com.amary.amarywebview.utils.orEmpty
 import com.amary.amarywebview.views.ShadowLayout
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.snackbar.Snackbar
+import okhttp3.OkHttpClient
 import kotlin.math.abs
 
 class AmaryWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener, View.OnClickListener {
@@ -216,6 +224,21 @@ class AmaryWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
   private var menuOpenWithTv: TextView? = null
   private var webLayout: FrameLayout? = null
 
+  //setup chucker
+  private var isChuckerEnabled: Boolean? = false
+  private var okHttpClient: OkHttpClient? = null
+  private var interceptHosts: Set<Regex>? = hashSetOf()
+  private var interceptAllHosts: Boolean? = false
+  private var interceptFileExtension: Set<String>? = hashSetOf()
+  private var interceptAllFileExtension: Boolean = false
+  private var interceptPreflight: Boolean = false
+  private var interceptFileSchema: Boolean  = false
+  private var interceptDataSchema: Boolean = false
+  private var handleRequestsPayload: Boolean = false
+  private var payloadRecorder: PayloadRecorder? = null
+  private var chuckerListener: ChuckerListener? = null
+  private var chuckerWebViewClient: ChuckerWebViewClient? = null
+
   private var downloadListener = DownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->
     onDownloadStart(this@AmaryWebViewActivity, key, url, userAgent, contentDisposition, mimetype, contentLength)
   }
@@ -360,6 +383,19 @@ class AmaryWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
     encoding = amaryWebView?.encoding
     data = amaryWebView?.data
     url = amaryWebView?.url
+
+    //chucker
+    isChuckerEnabled = amaryWebView?.isChuckerEnabled
+    okHttpClient = SetupInstance.getOkHttpClient()
+    interceptHosts = amaryWebView?.interceptHosts
+    interceptAllHosts = amaryWebView?.interceptAllHosts
+    interceptFileExtension = amaryWebView?.interceptFileExtension
+    interceptAllFileExtension = amaryWebView?.interceptAllFileExtension.orEmpty()
+    interceptPreflight = amaryWebView?.interceptPreflight.orEmpty()
+    interceptFileSchema  = amaryWebView?.interceptFileSchema.orEmpty()
+    interceptDataSchema = amaryWebView?.interceptDataSchema.orEmpty()
+    handleRequestsPayload = amaryWebView?.handleRequestsPayload.orEmpty()
+    chuckerListener = amaryWebView?.chuckerListener
   }
 
   private fun bindViews() {
@@ -705,7 +741,29 @@ class AmaryWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
     setContentView(R.layout.finest_web_view)
     bindViews()
     layoutViews()
+    setupChucker()
     initializeViews()
+  }
+
+  private fun setupChucker() {
+    if (isChuckerEnabled == true){
+      payloadRecorder = PayloadRecorder()
+      payloadRecorder?.let { webView?.addJavascriptInterface(it, "recorder") }
+    }
+    chuckerWebViewClient = ChuckerWebViewClient(
+      isChuckerEnabled = isChuckerEnabled.orEmpty(),
+      handleRequestsPayload = handleRequestsPayload,
+      interceptPreflight = interceptPreflight,
+      interceptAllHosts = interceptAllHosts.orEmpty(),
+      interceptHosts = interceptHosts.orEmpty(),
+      interceptFileSchema = interceptFileSchema.orEmpty(),
+      interceptDataSchema = interceptDataSchema,
+      interceptAllFileExtension = interceptAllFileExtension,
+      interceptFileExtension = interceptFileExtension.orEmpty(),
+      recorder = payloadRecorder,
+      chuckerListener = chuckerListener,
+      okHttpClient = okHttpClient
+    )
   }
 
   override fun onBackPressed() {
@@ -872,7 +930,7 @@ class AmaryWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
   // https://code.google.com/p/android/issues/detail?id=15694
   // http://stackoverflow.com/a/5966151/1797648
   private fun destroyWebView() {
-    Handler().postDelayed({
+    Handler(Looper.getMainLooper()).postDelayed({
                             if (webView != null) {
                               webView?.destroy()
                             }
@@ -881,20 +939,20 @@ class AmaryWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
 
   inner class MyWebChromeClient : WebChromeClient() {
     override fun onProgressChanged(view: WebView, progress: Int) {
-      var progress = progress
-      onProgressChanged(this@AmaryWebViewActivity, key, progress)
+      var currentProgress = progress
+      onProgressChanged(this@AmaryWebViewActivity, key, currentProgress)
       if (showSwipeRefreshLayout) {
-        if (swipeRefreshLayout?.isRefreshing == true && progress == 100) {
+        if (swipeRefreshLayout?.isRefreshing == true && currentProgress == 100) {
           swipeRefreshLayout?.post { swipeRefreshLayout?.isRefreshing = false }
         }
-        if (swipeRefreshLayout?.isRefreshing == false && progress != 100) {
+        if (swipeRefreshLayout?.isRefreshing == false && currentProgress != 100) {
           swipeRefreshLayout?.post { swipeRefreshLayout?.isRefreshing = true }
         }
       }
-      if (progress == 100) {
-        progress = 0
+      if (currentProgress == 100) {
+        currentProgress = 0
       }
-      progressBar?.progress = progress
+      progressBar?.progress = currentProgress
     }
 
     override fun onReceivedTitle(view: WebView, title: String) {
@@ -912,6 +970,7 @@ class AmaryWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
       if (!url.contains("docs.google.com") && url.endsWith(".pdf")) {
         webView?.loadUrl("http://docs.google.com/gview?embedded=true&url=$url")
       }
+      chuckerWebViewClient?.onPageStarted(view)
     }
 
     override fun onPageFinished(view: WebView, url: String) {
@@ -935,7 +994,15 @@ class AmaryWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
       }
     }
 
-    override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+    override fun shouldInterceptRequest(
+      view: WebView?,
+      request: WebResourceRequest?
+    ): WebResourceResponse? {
+      return chuckerWebViewClient?.shouldInterceptRequest(request)
+    }
+
+    override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+      val url = request.url.toString()
       return if (url.endsWith(".mp4")) {
         val intent = Intent(Intent.ACTION_VIEW)
         intent.setDataAndType(Uri.parse(url), "video/*")
@@ -958,7 +1025,7 @@ class AmaryWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
         startActivity(emailIntent)
         true
       } else {
-        super.shouldOverrideUrlLoading(view, url)
+        super.shouldOverrideUrlLoading(view, request)
       }
     }
 

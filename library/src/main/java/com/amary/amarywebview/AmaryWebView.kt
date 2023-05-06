@@ -13,10 +13,14 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.core.content.ContextCompat
-import com.google.android.material.appbar.AppBarLayout.LayoutParams.*
 import com.amary.amarywebview.enums.ProgressBarPosition
+import com.amary.amarywebview.helpers.ChuckerListener
+import com.amary.amarywebview.helpers.SetupInstance
 import com.amary.amarywebview.listeners.BroadCastManager
 import com.amary.amarywebview.listeners.WebViewListener
+import com.amary.amarywebview.utils.getHostRegex
+import com.google.android.material.appbar.AppBarLayout.LayoutParams.*
+import okhttp3.OkHttpClient
 import java.io.Serializable
 import java.util.*
 
@@ -153,6 +157,17 @@ data class AmaryWebView(
   var encoding: String? = null,
   var data: String? = null,
   var url: String? = null,
+
+  var isChuckerEnabled: Boolean? = false,
+  var interceptHosts: Set<Regex> = hashSetOf(),
+  var interceptAllHosts: Boolean = false,
+  var interceptFileExtension: Set<String> = hashSetOf(),
+  var interceptAllFileExtension: Boolean = false,
+  var interceptPreflight: Boolean = false,
+  var interceptFileSchema: Boolean  = false,
+  var interceptDataSchema: Boolean = false,
+  var handleRequestsPayload: Boolean = false,
+  @Transient var chuckerListener: ChuckerListener? = null
 ) : Serializable {
 
   constructor(ctx: Context) : this(context = ctx)
@@ -162,6 +177,120 @@ data class AmaryWebView(
    * animation. Try to create builder with Activity if it's possible.
    */
   constructor(activity: Activity) : this(context = activity)
+
+  fun setChuckerEnable(isEnabled: Boolean) = apply {
+    isChuckerEnabled = isEnabled
+  }
+
+  fun setOkHttpClient(client: OkHttpClient) : AmaryWebView {
+    if (this.isChuckerEnabled == false) return this
+    SetupInstance.setOkHttpClient(client)
+    return this
+  }
+
+  /**
+   * add a list of hosts to be debugged and tracked
+   */
+  fun addInterceptHost(host: String): AmaryWebView {
+    if (this.isChuckerEnabled == false) return this
+    val interceptHosts = hashSetOf<Regex>()
+    interceptHosts.add(host.getHostRegex(chuckerListener))
+    this.interceptHosts = interceptHosts
+    return this
+  }
+
+  /**
+   * add a list of hosts to be debugged and tracked
+   */
+  fun addInterceptHost(hosts: Collection<String>): AmaryWebView {
+    if (this.isChuckerEnabled == false) return this
+    val interceptHosts = hashSetOf<Regex>()
+    interceptHosts.addAll(hosts.map { it.getHostRegex() })
+    this.interceptHosts = interceptHosts
+    return this
+  }
+
+  /**
+   * add a list of hosts to be debugged and tracked
+   */
+  fun addInterceptHost(vararg hosts: String): AmaryWebView {
+    if (this.isChuckerEnabled == false) return this
+    addInterceptHost(hosts.toList())
+    return this
+  }
+
+  /**
+   * if enabled it will track every request to any host,
+   * might cause a large amount of requests (including third party requests like analytics), use with caution
+   */
+  fun interceptAllHosts(intercept: Boolean = true): AmaryWebView {
+    if (this.isChuckerEnabled == false) return this
+    this.interceptAllHosts = intercept
+    return this
+  }
+
+  /**
+   * if enabled it will track every resource fetched by the website
+   * might cause a large amount of requests (including css, js and images), use with caution
+   */
+  fun interceptAllFileExtension(intercept: Boolean = true): AmaryWebView {
+    if (this.isChuckerEnabled == false) return this
+    this.interceptAllFileExtension = intercept
+    return this
+  }
+
+  /**
+   * add an extension to be debugged and tracked
+   */
+  fun addInterceptFileExtension(extension: String): AmaryWebView {
+    if (this.isChuckerEnabled == false) return this
+    val interceptFileExtension = hashSetOf<String>()
+    interceptFileExtension.add(extension)
+    this.interceptFileExtension = interceptFileExtension
+    return this
+  }
+
+  /**
+   * add a list of extensions to be debugged and tracked
+   */
+  fun addInterceptFileExtension(extensions: Collection<String>): AmaryWebView {
+    if (this.isChuckerEnabled == false) return this
+    val interceptFileExtension = hashSetOf<String>()
+    interceptFileExtension.addAll(extensions)
+    this.interceptFileExtension = interceptFileExtension
+    return this
+  }
+
+  /**
+   * add a list of extensions to be debugged and tracked
+   */
+  fun addInterceptFileExtension(vararg extensions: String): AmaryWebView {
+    if (this.isChuckerEnabled == false) return this
+    addInterceptFileExtension(extensions.toList())
+    return this
+  }
+
+  /**
+   * Browsers send OPTION http requests before any actual requests to implement CORS,
+   * if enabled it you will get both requests
+   */
+  fun interceptPreflight(intercept: Boolean = true): AmaryWebView {
+    if (this.isChuckerEnabled == false) return this
+    this.interceptPreflight = intercept
+    return this
+  }
+
+  fun handleRequestsWithPayload(handle: Boolean = true): AmaryWebView {
+    if (this.isChuckerEnabled == false) return this
+    this.handleRequestsPayload = handle
+    return this
+  }
+
+  fun setChuckerListener(chuckerListener: ChuckerListener): AmaryWebView {
+    if (this.isChuckerEnabled == false) return this
+    this.chuckerListener = chuckerListener
+    return this
+  }
 
   fun setWebViewListener(listener: WebViewListener) = apply {
     listeners.clear()
@@ -446,7 +575,7 @@ data class AmaryWebView(
     this.data = data
     key = System.identityHashCode(this)
     if (listeners.isNotEmpty()) {
-      BroadCastManager(context, key!!, listeners)
+      key?.let { BroadCastManager(context, it, listeners) }
     }
     val intent = Intent(context, AmaryWebViewActivity::class.java)
     intent.putExtra("AmaryWebView", this)
