@@ -2,6 +2,7 @@ plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-parcelize'
+    id 'maven-publish'
 }
 
 final VERSION_MAJOR = 0
@@ -35,6 +36,27 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
+}
+
+publishing {
+    publications {
+        release(MavenPublication) {
+            groupId = 'com.github.amary21'
+            artifactId = 'amarywebview-android'
+            version = getVersionName(VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH)
+
+            afterEvaluate {
+                from components.release
+            }
+        }
     }
 }
 
