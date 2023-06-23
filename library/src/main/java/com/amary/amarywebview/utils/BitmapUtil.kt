@@ -1,4 +1,4 @@
-package com.thefinestartist.finestwebview.utils
+package com.amary.amarywebview.utils
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -7,9 +7,6 @@ import android.graphics.Color
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 
-/**
- * Created by Leonardo on 11/21/15.
- */
 object BitmapUtil {
   fun getColoredBitmap(
     context: Context,

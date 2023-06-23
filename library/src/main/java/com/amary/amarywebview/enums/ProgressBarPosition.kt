@@ -1,6 +1,5 @@
-package com.thefinestartist.finestwebview.enums
+package com.amary.amarywebview.enums
 
-/** Enum for progress bar positions. */
 enum class ProgressBarPosition {
   TOP_OF_TOOLBAR,
   BOTTOM_OF_TOOLBAR,

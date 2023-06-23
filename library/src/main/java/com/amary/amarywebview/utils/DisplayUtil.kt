@@ -1,4 +1,4 @@
-package com.thefinestartist.finestwebview.utils
+package com.amary.amarywebview.utils
 
 import android.content.Context
 import android.graphics.Point

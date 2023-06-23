@@ -1,4 +1,4 @@
-package com.thefinestartist.finestwebview.views
+package com.amary.amarywebview.views
 
 import android.content.Context
 import android.util.AttributeSet
@@ -6,11 +6,9 @@ import android.view.MotionEvent
 import android.view.View
 import android.webkit.WebView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.thefinestartist.finestwebview.utils.UnitConverter.dpToPx
+import com.amary.amarywebview.utils.UnitConverter.dpToPx
+import com.amary.amarywebview.utils.orEmpty
 
-/**
- * Created by TheFinestArtist on 3/12/16.
- */
 class CustomSwipeToRefresh : SwipeRefreshLayout {
   private var webView: WebView? = null
 
@@ -30,7 +28,7 @@ class CustomSwipeToRefresh : SwipeRefreshLayout {
 
   override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
     return webView != null
-      && webView!!.scrollY <= scrollBuffer
+      && webView?.scrollY.orEmpty() <= scrollBuffer
       && super.onInterceptTouchEvent(event)
   }
 
