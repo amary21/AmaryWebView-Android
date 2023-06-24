@@ -1,16 +1,14 @@
 package com.amary.amarywebview.listeners
 
-import android.annotation.SuppressLint
-
 abstract class WebViewListener {
   fun onProgressChanged(progress: Int) {}
-  fun onReceivedTitle(title: String?) {}
-  fun onReceivedTouchIconUrl(url: String?, preComposed: Boolean) {}
-  fun onPageStarted(url: String?) {}
-  fun onPageFinished(url: String?) {}
-  fun onLoadResource(url: String?) {}
-  fun onPageCommitVisible(url: String?) {}
-  fun onDownloadStart(
+  open fun onReceivedTitle(title: String?) {}
+  open fun onReceivedTouchIconUrl(url: String?, preComposed: Boolean) {}
+  open fun onPageStarted(url: String?) {}
+  open fun onPageFinished(url: String?) {}
+  open fun onLoadResource(url: String?) {}
+  open fun onPageCommitVisible(url: String?) {}
+  open fun onDownloadStart(
     url: String?,
     userAgent: String?,
     contentDisposition: String?,
