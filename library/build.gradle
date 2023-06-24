@@ -5,17 +5,17 @@ plugins {
     id 'maven-publish'
 }
 
-final VERSION_MAJOR = 0
+final VERSION_MAJOR = 1
 final VERSION_MINOR = 0
-final VERSION_PATCH = 1
+final VERSION_PATCH = 0
 
 android {
     namespace 'com.amary.amarywebview'
-    compileSdk 33
+    compileSdk 31
 
     defaultConfig {
         minSdk 21
-        targetSdk 33
+        targetSdk 31
         versionCode getVersionCode(VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH)
         versionName getVersionName(VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH)
         multiDexEnabled true
@@ -65,8 +65,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
-    debugImplementation 'com.github.chuckerteam.chucker:library:3.5.2'
-    releaseImplementation 'com.github.chuckerteam.chucker:library-no-op:3.5.2'
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
     implementation 'com.squareup.okhttp3:okhttp-urlconnection:4.10.0'
 }
 

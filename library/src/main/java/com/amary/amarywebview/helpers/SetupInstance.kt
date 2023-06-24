@@ -4,8 +4,6 @@ import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
 
 object SetupInstance {
-
-    // okhttpClient
     private var okHttpClient: OkHttpClient? = null
 
     private val defaultOkHttpClient by lazy {
@@ -20,6 +18,4 @@ object SetupInstance {
     }
 
     fun getOkHttpClient() = this.okHttpClient ?: defaultOkHttpClient
-
-    // context
 }
