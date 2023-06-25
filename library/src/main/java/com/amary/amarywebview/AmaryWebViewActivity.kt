@@ -520,7 +520,7 @@ class AmaryWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
       title?.text = titleDefault
       title?.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleSize)
       title?.typeface = TypefaceUtil[this, titleFont.orEmpty()]
-      title?.setTextColor(titleColor)
+      title?.setTextColor(finestWebViewTitleColor)
       urlTv?.visibility = if (showUrl) View.VISIBLE else View.GONE
       urlTv?.text = getHost(url.orEmpty())
       urlTv?.setTextSize(TypedValue.COMPLEX_UNIT_PX, urlSize)
