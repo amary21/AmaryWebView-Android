@@ -25,13 +25,6 @@
         </intent-filter>
       </activity>
 
-      <activity
-          android:configChanges="keyboardHidden|orientation|screenSize"
-          android:name="com.amary.amarywebview.AmaryWebViewActivity"
-          android:screenOrientation="sensor"
-          android:theme="@style/AmaryWebViewTheme.Light"
-          android:exported="true"/>
-
       <activity android:name="com.amary.amarywebview.sample.WebViewActivity"/>
   </application>
 

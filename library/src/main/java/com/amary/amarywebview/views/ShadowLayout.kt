@@ -11,6 +11,7 @@ import android.util.AttributeSet
 import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import com.amary.amarywebview.R
+import kotlin.math.abs
 
 class ShadowLayout : FrameLayout {
   private var shadowColor = 0
@@ -58,8 +59,8 @@ class ShadowLayout : FrameLayout {
   }
 
   private fun setPadding() {
-    val xPadding = (shadowSize + Math.abs(dx)).toInt()
-    val yPadding = (shadowSize + Math.abs(dy)).toInt()
+    val xPadding = (shadowSize + abs(dx)).toInt()
+    val yPadding = (shadowSize + abs(dy)).toInt()
     setPadding(xPadding, yPadding, xPadding, yPadding)
   }
 
@@ -90,28 +91,7 @@ class ShadowLayout : FrameLayout {
 
   override fun onDraw(canvas: Canvas) {
     super.onDraw(canvas)
-
-    //        RoundRectShape rss = new RoundRectShape(new float[]{12f, 12f, 12f,
-    //                12f, 12f, 12f, 12f, 12f}, null, null);
-    //        ShapeDrawable sds = new ShapeDrawable(rss);
-    //        sds.setShaderFactory(new ShapeDrawable.ShaderFactory() {
-    //
-    //            @Override
-    //            public Shader resize(int width, int height) {
-    //                LinearGradient lg = new LinearGradient(0, 0, 0, height,
-    //                        new int[]{Color.parseColor("#e5e5e5"),
-    //                                Color.parseColor("#e5e5e5"),
-    //                                Color.parseColor("#e5e5e5"),
-    //                                Color.parseColor("#e5e5e5")}, new float[]{0,
-    //                        0.50f, 0.50f, 1}, Shader.TileMode.REPEAT);
-    //                return lg;
-    //            }
-    //        });
-    //
-    //        LayerDrawable ld = new LayerDrawable(new Drawable[]{sds, sds});
-    //        ld.setLayerInset(0, 5, 5, 0, 0); // inset the shadow so it doesn't start right at the left/top
-    //        ld.setLayerInset(1, 0, 0, 5, 5); // inset the top drawable so we can leave a bit of space for the shadow to use
-    setBackgroundCompat(canvas.width, canvas.height)
+    setBackgroundCompat(width, height)
   }
 
   private fun setBackgroundCompat(w: Int, h: Int) {
@@ -137,15 +117,15 @@ class ShadowLayout : FrameLayout {
       shadowRect.top += dy
       shadowRect.bottom -= dy
     } else if (dy < 0) {
-      shadowRect.top += Math.abs(dy)
-      shadowRect.bottom -= Math.abs(dy)
+      shadowRect.top += abs(dy)
+      shadowRect.bottom -= abs(dy)
     }
     if (dx > 0) {
       shadowRect.left += dx
       shadowRect.right -= dx
     } else if (dx < 0) {
-      shadowRect.left += Math.abs(dx)
-      shadowRect.right -= Math.abs(dx)
+      shadowRect.left += abs(dx)
+      shadowRect.right -= abs(dx)
     }
     val shadowPaint = Paint()
     shadowPaint.isAntiAlias = true

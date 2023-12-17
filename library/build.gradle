@@ -6,16 +6,16 @@ plugins {
 }
 
 final VERSION_MAJOR = 1
-final VERSION_MINOR = 0
-final VERSION_PATCH = 3
+final VERSION_MINOR = 1
+final VERSION_PATCH = 0
 
 android {
     namespace 'com.amary.amarywebview'
-    compileSdk 31
+    compileSdk 33
 
     defaultConfig {
         minSdk 21
-        targetSdk 31
+        targetSdk 33
         versionCode getVersionCode(VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH)
         versionName getVersionName(VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH)
         multiDexEnabled true

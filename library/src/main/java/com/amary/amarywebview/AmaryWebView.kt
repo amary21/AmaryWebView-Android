@@ -3,7 +3,7 @@ package com.amary.amarywebview
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.webkit.WebSettings.*
+import android.webkit.WebSettings
 import androidx.annotation.AnimRes
 import androidx.annotation.ArrayRes
 import androidx.annotation.ColorInt
@@ -19,10 +19,9 @@ import com.amary.amarywebview.helpers.SetupInstance
 import com.amary.amarywebview.listeners.BroadCastManager
 import com.amary.amarywebview.listeners.WebViewListener
 import com.amary.amarywebview.utils.getHostRegex
-import com.google.android.material.appbar.AppBarLayout.LayoutParams.*
+import com.google.android.material.appbar.AppBarLayout
 import okhttp3.OkHttpClient
 import java.io.Serializable
-import java.util.*
 
 data class AmaryWebView(
   @Transient var context: Context,
@@ -120,7 +119,7 @@ data class AmaryWebView(
   var webViewTextZoom: Int? = null,
   var webViewUseWideViewPort: Boolean? = null,
   var webViewSupportMultipleWindows: Boolean? = null,
-  var webViewLayoutAlgorithm: LayoutAlgorithm? = null,
+  var webViewLayoutAlgorithm: WebSettings.LayoutAlgorithm? = null,
   var webViewStandardFontFamily: String? = null,
   var webViewFixedFontFamily: String? = null,
   var webViewSansSerifFontFamily: String? = null,
@@ -309,7 +308,7 @@ data class AmaryWebView(
 
   fun toolbarColor(@ColorInt color: Int) = apply { this.toolbarColor = color }
   fun toolbarColorRes(@ColorRes colorRes: Int) = apply { this.toolbarColor = ContextCompat.getColor(context, colorRes) }
-  fun toolbarScrollFlags(@ScrollFlags flags: Int) = apply { this.toolbarScrollFlags = flags }
+  fun toolbarScrollFlags(@AppBarLayout.LayoutParams.ScrollFlags flags: Int) = apply { this.toolbarScrollFlags = flags }
 
   fun iconDefaultColor(@ColorInt color: Int) = apply { this.iconDefaultColor = color }
   fun iconDefaultColorRes(@ColorRes color: Int) = apply { this.iconDefaultColor = ContextCompat.getColor(context, color) }
@@ -482,7 +481,7 @@ data class AmaryWebView(
 
   fun webViewSupportMultipleWindows(webViewSupportMultipleWindows: Boolean) = apply { this.webViewSupportMultipleWindows = webViewSupportMultipleWindows }
 
-  fun webViewLayoutAlgorithm(webViewLayoutAlgorithm: LayoutAlgorithm?): AmaryWebView = apply { this.webViewLayoutAlgorithm = webViewLayoutAlgorithm }
+  fun webViewLayoutAlgorithm(webViewLayoutAlgorithm: WebSettings.LayoutAlgorithm?): AmaryWebView = apply { this.webViewLayoutAlgorithm = webViewLayoutAlgorithm }
 
   fun webViewStandardFontFamily(webViewStandardFontFamily: String?) = apply { this.webViewStandardFontFamily = webViewStandardFontFamily }
 

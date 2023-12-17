@@ -1,1 +1,14 @@
-<manifest package="com.amary.amarywebview"/>
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.amary.amarywebview">
+
+    <application>
+        <activity
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:name="com.amary.amarywebview.AmaryWebViewActivity"
+            android:screenOrientation="sensor"
+            android:theme="@style/AmaryWebViewTheme.Light"
+            android:exported="true"/>
+    </application>
+
+</manifest>

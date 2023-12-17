@@ -12,23 +12,31 @@ import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.StateListDrawable
 import android.net.MailTo
 import android.net.Uri
-import android.os.Build.*
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.TypedValue
-import android.view.*
+import android.view.Gravity
+import android.view.View
+import android.view.ViewConfiguration
+import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.animation.Animation
-import android.view.animation.Animation.*
 import android.view.animation.AnimationUtils
 import android.webkit.DownloadListener
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
-import android.webkit.WebSettings.*
+import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.*
+import android.widget.FrameLayout
+import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.widget.ProgressBar
+import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
@@ -157,7 +165,7 @@ class AmaryWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
   private var webViewTextZoom: Int? = null
   private var webViewUseWideViewPort: Boolean? = null
   private var webViewSupportMultipleWindows: Boolean? = null
-  private var webViewLayoutAlgorithm: LayoutAlgorithm? = null
+  private var webViewLayoutAlgorithm: WebSettings.LayoutAlgorithm? = null
   private var webViewStandardFontFamily: String? = null
   private var webViewFixedFontFamily: String? = null
   private var webViewSansSerifFontFamily: String? = null
@@ -595,7 +603,7 @@ class AmaryWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
         webViewNeedInitialFocus?.let { setNeedInitialFocus(it)}
         webViewCacheMode?.let { cacheMode = it }
         webViewMixedContentMode?.let { mixedContentMode = it }
-        webViewOffscreenPreRaster?.let { if (VERSION.SDK_INT >= VERSION_CODES.M) {
+        webViewOffscreenPreRaster?.let { if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
           offscreenPreRaster = it
         }
         }
@@ -863,7 +871,7 @@ class AmaryWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
   private fun hideMenu() {
     val popupAnim = AnimationUtils.loadAnimation(this, R.anim.popup_flyout_hide)
     shadowLayout?.startAnimation(popupAnim)
-    popupAnim.setAnimationListener(object : AnimationListener {
+    popupAnim.setAnimationListener(object : Animation.AnimationListener {
       override fun onAnimationStart(animation: Animation) {}
       override fun onAnimationEnd(animation: Animation) {
         menuLayout?.visibility = View.GONE
