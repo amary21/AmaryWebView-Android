@@ -1,19 +1,10 @@
 package com.amary.amarywebview.sample
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.View
-import android.webkit.WebResourceRequest
 import androidx.appcompat.app.AppCompatActivity
 import com.amary.amarywebview.AmaryWebView
-import com.amary.amarywebview.helpers.ChuckerListener
-import com.amary.amarywebview.helpers.SyncCookieHandler
-import com.chuckerteam.chucker.api.ChuckerCollector
-import com.chuckerteam.chucker.api.ChuckerInterceptor
-import com.chuckerteam.chucker.api.RetentionManager
-import okhttp3.JavaNetCookieJar
-import okhttp3.OkHttpClient
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,60 +15,13 @@ class MainActivity : AppCompatActivity() {
     fun onClick(view: View) {
         when (view.id) {
             R.id.defaultTheme -> {
-
-                val collector = ChuckerCollector(
-                    context = this,
-                    showNotification = true,
-                    retentionPeriod = RetentionManager.Period.ONE_WEEK
-                )
-                val builder: OkHttpClient.Builder =
-                    OkHttpClient.Builder().cookieJar(JavaNetCookieJar(SyncCookieHandler()))
-                builder.addInterceptor(ChuckerInterceptor.Builder(this)
-                    .collector(collector)
-                    .build())
                 AmaryWebView(this).titleDefault("The Finest Artist")
-                    .setChuckerEnable(true)
-                    .setOkHttpClient(builder.build())
                     .webViewJavaScriptEnabled(true)
-                    .addInterceptHost("thefinestartist.com")
-                    .interceptAllHosts(true)
-                    .addInterceptFileExtension("json", "jpeg")
-                    .interceptAllFileExtension(false)
-                    .handleRequestsWithPayload(true)
-                    .interceptPreflight(false)
-                    .setChuckerListener(object : ChuckerListener() {
-                        override fun onHandleRequestViaOkHttp(request: WebResourceRequest) {
-                            Log.e("ChuckerWebViewHelper","okHttp handling  ${request.method} ${request.url}")
-                        }
-
-                        override fun onInvalidHostRegex(e: Exception) {
-                            Log.e("ChuckerWebViewHelper", e.message.toString())
-                        }
-
-                        override fun onFailedOKHttpRequest(request: WebResourceRequest, e: Exception) {
-                            Log.e("ChuckerWebViewHelper","okHttp handling failed  ${request.method} ${request.url}")
-
-                        }
-                    })
                     .show("http://thefinestartist.com")
             }
             R.id.redTheme -> {
-                val collector = ChuckerCollector(
-                    context = this,
-                    showNotification = true,
-                    retentionPeriod = RetentionManager.Period.ONE_WEEK
-                )
-                val builder: OkHttpClient.Builder =
-                    OkHttpClient.Builder().cookieJar(JavaNetCookieJar(SyncCookieHandler()))
-                builder.addInterceptor(ChuckerInterceptor.Builder(this)
-                    .collector(collector)
-                    .build())
                 AmaryWebView(this)
                     .theme(R.style.RedTheme)
-                    .setChuckerEnable(true)
-                    .setOkHttpClient(builder.build())
-                    .addInterceptHost("example.com", "my.website.com")
-                    .interceptAllHosts(true)
                     .titleDefault("Bless This Stuff")
                     .webViewBuiltInZoomControls(true)
                     .webViewDisplayZoomControls(true)

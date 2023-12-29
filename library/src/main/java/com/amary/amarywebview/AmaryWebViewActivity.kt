@@ -27,7 +27,6 @@ import android.view.animation.AnimationUtils
 import android.webkit.DownloadListener
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
-import android.webkit.WebResourceResponse
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -45,10 +44,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.amary.amarywebview.enums.ProgressBarPosition
-import com.amary.amarywebview.helpers.ChuckerListener
-import com.amary.amarywebview.helpers.ChuckerWebViewClient
-import com.amary.amarywebview.helpers.PayloadRecorder
-import com.amary.amarywebview.helpers.SetupInstance
 import com.amary.amarywebview.listeners.BroadCastManager.Companion.onDownloadStart
 import com.amary.amarywebview.listeners.BroadCastManager.Companion.onLoadResource
 import com.amary.amarywebview.listeners.BroadCastManager.Companion.onPageCommitVisible
@@ -71,7 +66,6 @@ import com.amary.amarywebview.utils.orEmpty
 import com.amary.amarywebview.views.ShadowLayout
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
-import okhttp3.OkHttpClient
 import kotlin.math.abs
 
 class AmaryWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener, View.OnClickListener {
@@ -234,7 +228,6 @@ class AmaryWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
 
   //setup chucker
   private var isChuckerEnabled: Boolean? = false
-  private var okHttpClient: OkHttpClient? = null
   private var interceptHosts: Set<Regex>? = hashSetOf()
   private var interceptAllHosts: Boolean? = false
   private var interceptFileExtension: Set<String>? = hashSetOf()
@@ -243,9 +236,6 @@ class AmaryWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
   private var interceptFileSchema: Boolean  = false
   private var interceptDataSchema: Boolean = false
   private var handleRequestsPayload: Boolean = false
-  private var payloadRecorder: PayloadRecorder? = null
-  private var chuckerListener: ChuckerListener? = null
-  private var chuckerWebViewClient: ChuckerWebViewClient? = null
 
   private var downloadListener = DownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->
     onDownloadStart(this@AmaryWebViewActivity, key, url, userAgent, contentDisposition, mimetype, contentLength)
@@ -394,7 +384,6 @@ class AmaryWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
 
     //chucker
     isChuckerEnabled = amaryWebView?.isChuckerEnabled
-    okHttpClient = SetupInstance.getOkHttpClient()
     interceptHosts = amaryWebView?.interceptHosts
     interceptAllHosts = amaryWebView?.interceptAllHosts
     interceptFileExtension = amaryWebView?.interceptFileExtension
@@ -403,7 +392,6 @@ class AmaryWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
     interceptFileSchema  = amaryWebView?.interceptFileSchema.orEmpty()
     interceptDataSchema = amaryWebView?.interceptDataSchema.orEmpty()
     handleRequestsPayload = amaryWebView?.handleRequestsPayload.orEmpty()
-    chuckerListener = amaryWebView?.chuckerListener
   }
 
   private fun bindViews() {
@@ -749,29 +737,7 @@ class AmaryWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
     setContentView(R.layout.finest_web_view)
     bindViews()
     layoutViews()
-    setupChucker()
     initializeViews()
-  }
-
-  private fun setupChucker() {
-    if (isChuckerEnabled == true){
-      payloadRecorder = PayloadRecorder()
-      payloadRecorder?.let { webView?.addJavascriptInterface(it, "recorder") }
-    }
-    chuckerWebViewClient = ChuckerWebViewClient(
-      isChuckerEnabled = isChuckerEnabled.orEmpty(),
-      handleRequestsPayload = handleRequestsPayload,
-      interceptPreflight = interceptPreflight,
-      interceptAllHosts = interceptAllHosts.orEmpty(),
-      interceptHosts = interceptHosts.orEmpty(),
-      interceptFileSchema = interceptFileSchema.orEmpty(),
-      interceptDataSchema = interceptDataSchema,
-      interceptAllFileExtension = interceptAllFileExtension,
-      interceptFileExtension = interceptFileExtension.orEmpty(),
-      recorder = payloadRecorder,
-      chuckerListener = chuckerListener,
-      okHttpClient = okHttpClient
-    )
   }
 
   override fun onBackPressed() {
@@ -978,7 +944,6 @@ class AmaryWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
       if (!url.contains("docs.google.com") && url.endsWith(".pdf")) {
         webView?.loadUrl("http://docs.google.com/gview?embedded=true&url=$url")
       }
-      chuckerWebViewClient?.onPageStarted(view)
     }
 
     override fun onPageFinished(view: WebView, url: String) {
@@ -1000,13 +965,6 @@ class AmaryWebViewActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedLi
       if (injectJavaScript != null) {
         webView?.evaluateJavascript(injectJavaScript.orEmpty(), null)
       }
-    }
-
-    override fun shouldInterceptRequest(
-      view: WebView?,
-      request: WebResourceRequest?
-    ): WebResourceResponse? {
-      return chuckerWebViewClient?.shouldInterceptRequest(request)
     }
 
     override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
